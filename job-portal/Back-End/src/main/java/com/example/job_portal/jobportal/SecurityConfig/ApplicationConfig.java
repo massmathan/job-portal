@@ -1,47 +1,38 @@
 package com.example.job_portal.jobportal.SecurityConfig;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
-import jakarta.servlet.http.HttpServletRequest;
-
+import com.example.job_portal.jobportal.Repository.UserRepository;
 
 @Configuration
-public class ApplicatonConfig {
+public class ApplicationConfig {
 
-    
+    private final UserRepository userRepository;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .cors().and() 
-            .csrf().disable()
-            .authorizeHttpRequests()
-            .anyRequest().permitAll();
-
-        return http.build();
+    public ApplicationConfig(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
 
 
 
-// package com.example.job_portal.jobportal.SecurityConfig;
+
 
 // import java.util.Arrays;
 // import java.util.Collections;
